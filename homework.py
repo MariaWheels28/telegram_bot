@@ -99,7 +99,7 @@ def check_response(response):
         msg = 'Отсутствие ключа status в значении homework.'
         logger.error(msg)
         raise exceptions.FailureKeyException(msg)
-    
+
     return response['homeworks'][0]
 
 
