@@ -21,7 +21,6 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 RETRY_PERIOD = 600
 ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
 HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
-bot = TeleBot(token=TELEGRAM_TOKEN)
 DATE_TIME = datetime.datetime(1970, 1, 1)
 
 
@@ -62,8 +61,8 @@ def send_message(bot, message):
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logger.debug(f'Сообщение успешно отправлено: {message}')
-    except exceptions.MessageSendingException(msg):
-        logger.error(msg)
+    except Exception as ex:
+        logger.error(f'{msg}: {ex}')
 
 
 def get_api_answer(timestamp):
@@ -78,15 +77,19 @@ def get_api_answer(timestamp):
             logger.error(msg)
             raise exceptions.APIResponseNot200Error(msg)
         return response.json()
-    except exceptions.APIResponseException(msg):
-        logger.error(msg)
+    except requests.RequestException as ex:
+        logger.error(f'{msg}: {ex}')
 
 
 def check_response(response):
     """Проверка статуса ответа домашней работы."""
+    if not isinstance(response, dict):
+        raise TypeError('В ответе API данные не в виде словаря.')
     if response.get('homeworks') is None:
         msg = 'Отсутствие ключа homework в ответе response.'
         raise exceptions.FailureKeyException(msg)
+    if not isinstance(response.get('homeworks'), list):
+        raise TypeError('В ответе API данные не в виде списка.')
     if response['homeworks'] == []:
         msg = 'Отсутствие значения homework в ответе response.'
         raise exceptions.EmptyValueKeyException(msg)
@@ -96,10 +99,7 @@ def check_response(response):
         msg = 'Отсутствие ключа status в значении homework.'
         logger.error(msg)
         raise exceptions.FailureKeyException(msg)
-    if status not in HOMEWORK_VERDICTS:
-        msg = f'Hеожиданный статус домашней работы: {status}'
-        logger.error(msg)
-        raise exceptions.StatusNotFoundException(msg)
+    
     return response['homeworks'][0]
 
 
@@ -115,6 +115,10 @@ def parse_status(homework):
         msg = f'Пустое значение homework_name: {homework_name}'
         logger.error(msg)
         raise exceptions.EmptyValueError(msg)
+    if status not in HOMEWORK_VERDICTS:
+        msg = f'Hеожиданный статус домашней работы: {status}'
+        logger.error(msg)
+        raise exceptions.StatusNotFoundException(msg)
     verdict = HOMEWORK_VERDICTS[status]
 
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
@@ -136,7 +140,7 @@ def main():
             if homework and previous_status != status:
                 message = parse_status(homework)
                 send_message(bot, message)
-                previous_status = homework['status']
+                previous_status = status
             else:
                 logger.debug(f'Статус домашней работы не изменен: {status}')
 

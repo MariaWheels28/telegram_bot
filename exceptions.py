@@ -3,11 +3,6 @@ class GlobalException(Exception):
     pass
 
 
-class APIResponseException(Exception):
-    """Сбой при подключении к API."""
-    pass
-
-
 class APIResponseNot200Error(Exception):
     """Ответ API не равен 200."""
     pass
@@ -25,9 +20,4 @@ class FailureKeyException(Exception):
 
 class StatusNotFoundException(Exception):
     """Статус ответа не задокументирован."""
-    pass
-
-
-class MessageSendingException(Exception):
-    """Ошибка отправки сообщения."""
     pass
