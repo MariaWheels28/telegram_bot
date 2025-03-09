@@ -108,11 +108,11 @@ def parse_status(homework):
     status = homework.get('status')
     homework_name = homework.get('homework_name')
     if status is None:
-        msg = f'Пустое значение status: {status}'
+        msg = 'Пустое значение status.'
         logger.error(msg)
         raise exceptions.EmptyValueError(msg)
     if homework_name is None:
-        msg = f'Пустое значение homework_name: {homework_name}'
+        msg = 'Пустое значение homework_name.'
         logger.error(msg)
         raise exceptions.EmptyValueError(msg)
     if status not in HOMEWORK_VERDICTS:
