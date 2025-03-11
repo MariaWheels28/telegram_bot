@@ -39,11 +39,20 @@ logger.addHandler(handler)
 
 def check_tokens():
     """Проверка наличия токенов."""
-    for var in [TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, PRACTICUM_TOKEN]:
+    GLOBAL_VALUE = (
+        ('PRACTICUM_TOKEN', PRACTICUM_TOKEN),
+        ('TELEGRAM_TOKEN', TELEGRAM_TOKEN),
+        ('TELEGRAM_CHAT_ID', TELEGRAM_CHAT_ID),
+    )
+    empty_values = []
+    for key, var in GLOBAL_VALUE:
         if var is None:
-            msg = 'Недостаточное количество переменных окружения.'
+            msg = f'Отсутствует обязательная переменная окружения: {key}'
+            empty_values.append(key)
             logging.critical(msg)
-            raise exceptions.GlobalException(msg)
+    if empty_values:
+        raise exceptions.GlobalException(
+            f'Недостаточное количество переменных окружения: {empty_values}')
 
 
 def send_message(bot, message):
