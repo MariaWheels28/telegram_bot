@@ -20,7 +20,6 @@ PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-
 RETRY_PERIOD = 600
 ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
 HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
@@ -78,19 +77,14 @@ def get_api_answer(timestamp):
 
     msg = f'Сбой при подключении к эндпоинту: {ENDPOINT}'
     main_params = {
-        'ENDPOINT': ENDPOINT,
-        'HEADERS': HEADERS,
+        'url': ENDPOINT,
+        'headers': HEADERS,
         'params': payload
     }
     try:
         logger.info(f'Программа начала запрос: {main_params}')
-        response = requests.get(
-            main_params['ENDPOINT'],
-            headers=main_params['HEADERS'],
-            params=main_params['params']
-        )
+        response = requests.get(**main_params)
     except requests.RequestException as ex:
-        logger.error(f'{msg}: {ex}')
         raise exceptions.FailResponseError(f'{msg}: {ex}')
 
     if response.status_code != HTTPStatus.OK:
@@ -126,14 +120,13 @@ def parse_status(homework):
     status = homework.get('status')
     homework_name = homework.get('homework_name')
     if status is None:
-        msg = 'Пустое значение status.'
-        raise exceptions.EmptyValueError(msg)
+        raise exceptions.EmptyValueError('Пустое значение status.')
     if homework_name is None:
-        msg = 'Пустое значение homework_name.'
-        raise exceptions.EmptyValueError(msg)
+        raise exceptions.EmptyValueError('Пустое значение homework_name.')
     if status not in HOMEWORK_VERDICTS:
-        msg = f'Hеожиданный статус домашней работы: {status}'
-        raise exceptions.StatusNotFoundException(msg)
+        raise exceptions.StatusNotFoundException(
+            f'Hеожиданный статус домашней работы: {status}'
+        )
     verdict = HOMEWORK_VERDICTS[status]
 
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
@@ -158,7 +151,7 @@ def main():
                     timestamp = response.get('current_date', timestamp)
                     previous_error = ''
             else:
-                logger.debug('Статус домашней работы не изменен.')
+                logger.info('Статус домашней работы не изменен.')
 
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
