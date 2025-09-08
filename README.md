@@ -77,36 +77,29 @@ If an error repeats in each cycle, it is logged every time but only one Telegram
    ```bash
    git clone https://github.com/yourusername/homework-status-bot.git
    cd homework-status-bot
-Create and activate a virtual environment:
+   
+2. Create and activate a virtual environment:
+  ```bash
+  python3 -m venv venv
+  source venv/bin/activate
 
-bash
-Copy code
-python3 -m venv venv
-source venv/bin/activate
-Install dependencies:
+3. Install dependencies:
+  ```bash
+  pip install -r requirements.txt
 
-bash
-Copy code
-pip install -r requirements.txt
-Create a .env file with your tokens:
+4. Create a .env file with your tokens:
+  ```env
+  PRACTICUM_TOKEN=your_practicum_api_token
+  TELEGRAM_TOKEN=your_telegram_bot_token
+  TELEGRAM_CHAT_ID=your_chat_id
 
-env
-Copy code
-PRACTICUM_TOKEN=your_practicum_api_token
-TELEGRAM_TOKEN=your_telegram_bot_token
-TELEGRAM_CHAT_ID=your_chat_id
-Run the bot:
-
-bash
-Copy code
-python homework.py
-Technologies Used
-Python 3.x
+5. Run the bot:
+  ```bash
+  python homework.py
+  Technologies Used
+  Python 3.x
 
 requests — for API calls
-
 python-telegram-bot (or telebot) — for Telegram integration
-
 logging — for error and debug logging
-
 dotenv — for managing environment variables
