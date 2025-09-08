@@ -50,9 +50,6 @@ The bot logs all important events with the following format:
 
 YYYY-MM-DD HH:MM:SS,MS [LEVEL] Message
 
-markdown
-Copy code
-
 ### Examples
 - `2021-10-09 15:34:45,150 [ERROR] API endpoint https://practicum.yandex.ru/api/user_api/homework_statuses/ unavailable. Response code: 404`
 - `2021-10-09 16:19:13,149 [CRITICAL] Missing required environment variable: 'TELEGRAM_CHAT_ID'. Program terminated.`
@@ -79,25 +76,25 @@ If an error repeats in each cycle, it is logged every time but only one Telegram
    cd homework-status-bot
    
 2. Create and activate a virtual environment:
-  ```bash
-  python3 -m venv venv
-  source venv/bin/activate
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
 
 3. Install dependencies:
-  ```bash
-  pip install -r requirements.txt
+   ```bash
+   pip install -r requirements.txt
 
 4. Create a .env file with your tokens:
-  ```env
-  PRACTICUM_TOKEN=your_practicum_api_token
-  TELEGRAM_TOKEN=your_telegram_bot_token
-  TELEGRAM_CHAT_ID=your_chat_id
+   ```env
+   PRACTICUM_TOKEN=your_practicum_api_token
+   TELEGRAM_TOKEN=your_telegram_bot_token
+   TELEGRAM_CHAT_ID=your_chat_id
 
 5. Run the bot:
-  ```bash
-  python homework.py
-  Technologies Used
-  Python 3.x
+   ```bash
+   python homework.py
+   Technologies Used
+   Python 3.x
 
 requests — for API calls
 python-telegram-bot (or telebot) — for Telegram integration
