@@ -93,8 +93,6 @@ If an error repeats in each cycle, it is logged every time but only one Telegram
 5. Run the bot:
    ```bash
    python homework.py
-   Technologies Used
-   Python 3.x
 
 requests — for API calls
 python-telegram-bot (or telebot) — for Telegram integration
